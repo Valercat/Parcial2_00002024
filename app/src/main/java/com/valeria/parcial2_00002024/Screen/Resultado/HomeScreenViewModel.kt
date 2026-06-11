@@ -1,9 +1,10 @@
 package com.valeria.parcial2_00002024.Screen.Resultado
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.valeria.parcial2_00002024.Data.api.repositories.RankedApi
-import com.valeria.parcial2_00002024.Data.api.repositories.RankedInterface
+import com.valeria.parcial2_00002024.Data.repository.RankedApi
+import com.valeria.parcial2_00002024.Data.repository.RankedInterface
 import com.valeria.parcial2_00002024.Model.RankedModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,15 +20,30 @@ class HomeScreenViewModel : ViewModel(){
     val error = _error.asStateFlow()
 
     init{
-        rankedVotos()
+        getRankedList()
     }
 
-    fun rankedVotos(){
-    viewModelScope.launch {
-        _error.value = null
-        rankedRepository.GetRankedDto()
-            .onSuccess { ranked -> _ranked.value = ranked}
-            .onFailure {error -> _error.value = error.message}
+    fun getRankedList() {
+        viewModelScope.launch {
+            _error.value = null
+            rankedRepository.getRankedList()
+                .onSuccess { ranked -> _ranked.value = ranked }
+                .onFailure { error -> _error.value = error.message }
+        }
     }
+
+    fun rankedVotos(voto: Int){
+        viewModelScope.launch {
+            _error.value = null
+            rankedRepository.postRankedVoto(optionId = voto)
+                .onSuccess {
+                    Log.d("HomeScreenViewModel", "Votos registrados correctamente")
+                    getRankedList() // Refresh the list after voting
+                }
+                .onFailure { error ->
+                    Log.e("HomeScreenViewModel", "Error al registrar votos: ${error.message}")
+                    _error.value = error.message
+                }
+        }
     }
 }

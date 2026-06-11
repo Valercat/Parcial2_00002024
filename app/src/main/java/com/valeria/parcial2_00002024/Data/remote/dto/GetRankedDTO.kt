@@ -1,4 +1,4 @@
-package com.valeria.parcial2_00002024.Data.api.dto
+package com.valeria.parcial2_00002024.Data.remote.dto
 
 import com.valeria.parcial2_00002024.Model.RankedModel
 import kotlinx.serialization.Serializable

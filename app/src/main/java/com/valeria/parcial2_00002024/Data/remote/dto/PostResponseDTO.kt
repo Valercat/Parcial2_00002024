@@ -1,0 +1,9 @@
+package com.valeria.parcial2_00002024.Data.remote.dto
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PostResponseDTO(
+    val ok: Boolean,
+    val message: String
+)

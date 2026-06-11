@@ -1,8 +1,6 @@
-package com.valeria.parcial2_00002024.Data.api
+package com.valeria.parcial2_00002024.Data.remote
 
 
-import android.R.attr.level
-import android.net.http.HttpResponseCache.install
 import com.valeria.parcial2_00002024.BuildConfig
 import android.util.Log
 import io.ktor.client.HttpClient

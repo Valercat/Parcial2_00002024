@@ -1,6 +1,7 @@
 package com.valeria.parcial2_00002024.Screen.Resultado
 
 import android.R.attr.onClick
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +38,7 @@ import coil3.compose.AsyncImage
 import com.valeria.parcial2_00002024.Model.RankedModel
 import kotlin.Int
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import com.valeria.parcial2_00002024.Components.HomeItems
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +46,6 @@ import com.valeria.parcial2_00002024.Components.HomeItems
 fun HomeScreen(
 viewModel : HomeScreenViewModel = viewModel()) {
     val ranked by viewModel.ranked.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -60,9 +62,13 @@ viewModel : HomeScreenViewModel = viewModel()) {
             Text(text = "Home Screen")
 
             LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                items(ranked) { ranked ->
-                    HomeItems(ranked = ranked)
+                items(ranked) { item ->
+                    HomeItems(ranked = item, onVote = { id ->
+                        viewModel.rankedVotos(id) // Llama al ViewModel con el ID seleccionado
+                    })
+                    Spacer(modifier = Modifier.padding(12.dp))
                 }
+
             }
         }
     }

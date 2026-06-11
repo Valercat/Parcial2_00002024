@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -20,7 +20,7 @@ import coil3.compose.AsyncImage
 import com.valeria.parcial2_00002024.Model.RankedModel
 
 @Composable
-fun HomeItems(ranked: RankedModel)
+fun HomeItems(ranked: RankedModel, onVote: (Int) -> Unit)
 {
     Card(
         modifier = Modifier
@@ -37,8 +37,12 @@ fun HomeItems(ranked: RankedModel)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.padding(12.dp))
             Text(text = ranked.name)
+            Spacer(modifier = Modifier.padding(12.dp))
+            Button(onClick = { onVote(ranked.id) }) {
+                Text("Votar")
+            }
         }
     }
 }

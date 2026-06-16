@@ -4,7 +4,7 @@ import com.valeria.parcial2_00002024.Data.model.Option
 import kotlinx.coroutines.flow.Flow
 
 interface OptionRepository {
-    fun getOptions(): Flow<List<Option>>
-    suspend fun addOption(option: Option)
+    fun getOptionsForQuestions(questionId: Int): Flow<List<Option>>
+    suspend fun addOption(name: String, imageUrl: String, questionId: Int)
     suspend fun deleteOption(option: Option)
 }

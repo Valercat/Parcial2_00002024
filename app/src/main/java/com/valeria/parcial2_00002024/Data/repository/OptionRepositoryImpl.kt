@@ -12,12 +12,13 @@ class OptionRepositoryImpl(
 ) : OptionRepository {
 
     //devuelve el floww del dao
-    override fun getOptions(): Flow<List<Option>> {
-        return optionDao.getAllOptions().map{ entities ->
+    override fun getOptionsForQuestions(questionId: Int): Flow<List<Option>> {
+        return optionDao.getOptionsForQuestion(questionId).map { entities ->
             entities.map{ it.toModel()}
         }
     }
-    override suspend fun addOption(option: Option) {
+    override suspend fun addOption(name: String, imageUrl: String, questionId: Int) {
+        val option = Option(name = name, imageUrl = imageUrl, questionId = questionId)
         optionDao.insertOption(option.toEntity())
     }
     override suspend fun deleteOption(option: Option) {

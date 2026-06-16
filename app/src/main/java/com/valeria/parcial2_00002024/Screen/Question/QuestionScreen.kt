@@ -1,5 +1,6 @@
-package com.valeria.parcial2_00002024.Screen.Options
+package com.valeria.parcial2_00002024.Screen.Question
 
+import com.valeria.parcial2_00002024.Screen.Question.QuestionViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,9 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,41 +38,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.valeria.parcial2_00002024.Screen.Options.OptionBottomSheet
+import com.valeria.parcial2_00002024.Screen.Options.OptionsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OptionsScreen(
-    questionId: Int,
-    viewModel: OptionsViewModel = viewModel(
-        key = "OptiosViewModel_$questionId",
-        factory = OptionsViewModel.provideFactory(questionId)
+fun QuestionsScreen(
+    viewModel: QuestionViewModel = viewModel(
+        factory = QuestionViewModel.Factory
     ),
-    navigateBack: () -> Unit
+    onQuestionClick: (Int) -> Unit
 ) {
-    val options by viewModel.options.collectAsStateWithLifecycle()
+    val question by viewModel.question.collectAsStateWithLifecycle()
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         topBar = {
             TopAppBar(
-                title = { Text("Administrar opciones") },
+                    title = { Text("Preguntas") },
                 actions = {
-                    Row{
                     TextButton(onClick = { showSheet = true }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Nueva opción")
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Nuevo")
-                    }
-                    TextButton(onClick = navigateBack) {
-                        Text("Volver")
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volcer",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
+                        Text("Nueva")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -87,7 +78,7 @@ fun OptionsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
 
-            if (options.isEmpty()) {
+            if (question.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -101,7 +92,7 @@ fun OptionsScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Todavia no hay opciones",
+                        text = "Todavia no hay preguntas",
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
@@ -116,43 +107,44 @@ fun OptionsScreen(
                     contentPadding = PaddingValues(vertical = 4.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(items = options, key = { it.id }) { option ->
+                    items(items = question, key = { it.id }) { question ->
                         ElevatedCard {
                             ListItem(
                                 headlineContent = {
                                     Text(
-                                        text = option.name,
+                                        text = question.title,
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                 },
-                                supportingContent = {
-                                    Text(
-                                        text = option.imageUrl,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                },
                                 trailingContent = {
-                                    IconButton(onClick = { viewModel.deleteOption(option) }) {
+                                    Row() {
+                                    IconButton(onClick = { onQuestionClick(question.id)}) {
                                         Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = "Borrar ${option.name}",
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = "Borrar ${question.title}",
                                             tint = MaterialTheme.colorScheme.error
                                         )
+                                    }
+                                    IconButton(onClick = { viewModel.deleteQuestion(question) }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Borrar ${question.title}",
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    }
                                     }
                                 }
                             )
                         }
                     }
-
                 }
             }
         }
     }
     if (showSheet) {
-        OptionBottomSheet(
-            onSave = { name, imageUrl ->
-                viewModel.addOption(name, imageUrl)
+        QuestionsBottomSheet(
+            onSave = { title ->
+                viewModel.addQuestion(title = title)
             },
             onDismiss = { showSheet = false }
         )

@@ -5,19 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.valeria.parcial2_00002024.Data.database.dao.OptionDao
+import com.valeria.parcial2_00002024.Data.database.dao.QuestionDao
 import com.valeria.parcial2_00002024.Data.database.entities.OptionEntity
+import com.valeria.parcial2_00002024.Data.database.entities.QuestionEntity
 
 //se declara las entities y da acces a los daos
 
 @Database(
-    entities = [OptionEntity::class],
+    entities = [QuestionEntity::class, OptionEntity::class],
     //cuando se agrege otra tabla sube
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
 abstract class AppDatabase : RoomDatabase() {
 
+    abstract fun questionDao(): QuestionDao
     abstract fun optionDao(): OptionDao
 
     companion object {

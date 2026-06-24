@@ -23,20 +23,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-
-
+import com.valeria.parcial2_00002024.Data.model.Option
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionBottomSheet(
-    onSave: (name: String, imageUrl: String) -> Unit,
-    onDismiss: () -> Unit
+    onSave: (value: String, imageUrl: String) -> Unit,
+    onDismiss: () -> Unit,
+    Option: Option? = null
 ) {
     val sheetState = rememberModalBottomSheetState()
-    var name by rememberSaveable { mutableStateOf("") }
-    var imageUrl by rememberSaveable { mutableStateOf("") }
+    
+    // Aquí prellenamos los datos si 'Option' no es nulo
+    var value by rememberSaveable { mutableStateOf(Option?.value ?: "") }
+    var imageUrl by rememberSaveable { mutableStateOf(Option?.imageUrl ?: "") }
 
-    val isValid = name.isNotBlank() && imageUrl.isNotBlank()
+    val isValid = value.isNotBlank() && imageUrl.isNotBlank()
+    val edit = Option != null
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -49,21 +52,34 @@ fun OptionBottomSheet(
                 .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Nueva opción",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Agrega nombre e imagen para que aparezca en la lista.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (!edit) {
+                Text(
+                    text = "Nueva opción",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Agrega nombre e imagen para que aparezca en la lista.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                Text(
+                    text = "Editar opción",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Edita el nombre y la imagen de la opción.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Nombre del lugar") },
+                value = value,
+                onValueChange = { value = it },
+                label = { Text(if (edit) "Editar nombre" else "Nombre del lugar") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -85,7 +101,7 @@ fun OptionBottomSheet(
                 Button(
                     onClick = {
                         if (isValid) {
-                            onSave(name.trim(), imageUrl.trim())
+                            onSave(value.trim(), imageUrl.trim())
                             onDismiss()
                         }
                     },

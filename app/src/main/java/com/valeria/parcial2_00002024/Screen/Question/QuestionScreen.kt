@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
@@ -31,6 +32,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.valeria.parcial2_00002024.Data.model.Option
+import com.valeria.parcial2_00002024.Data.model.Question
 import com.valeria.parcial2_00002024.Screen.Options.OptionBottomSheet
 import com.valeria.parcial2_00002024.Screen.Options.OptionsViewModel
 
@@ -53,13 +57,17 @@ fun QuestionsScreen(
     val question by viewModel.question.collectAsStateWithLifecycle()
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
+    var selectedQuestion by remember { mutableStateOf<Question?>(null) }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         topBar = {
             TopAppBar(
                     title = { Text("Preguntas") },
                 actions = {
-                    TextButton(onClick = { showSheet = true }) {
+                    TextButton(onClick = {
+                        selectedQuestion = null
+                        showSheet = true  }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Nueva opción")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Nueva")
@@ -132,6 +140,15 @@ fun QuestionsScreen(
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                     }
+                                        IconButton(onClick  = {
+                                            selectedQuestion = question
+                                            showSheet = true}){
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "Editar ${question.title}"
+                                            )
+
+                                        }
                                     }
                                 }
                             )
@@ -141,12 +158,20 @@ fun QuestionsScreen(
             }
         }
     }
+
     if (showSheet) {
         QuestionsBottomSheet(
+            Question = selectedQuestion,
+            onDismiss = { showSheet = false
+                selectedQuestion = null},
             onSave = { title ->
-                viewModel.addQuestion(title = title)
-            },
-            onDismiss = { showSheet = false }
+                if (selectedQuestion == null) {
+                    viewModel.addQuestion(title)
+                } else {
+                    //copia el id del option escogido
+                    viewModel.updateQuestion(selectedQuestion!!.copy(title = title) )
+                }
+            }
         )
     }
 }

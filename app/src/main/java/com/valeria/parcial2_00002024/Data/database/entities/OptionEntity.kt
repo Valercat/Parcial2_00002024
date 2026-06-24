@@ -24,15 +24,15 @@ import com.valeria.parcial2_00002024.Data.model.Option
 data class OptionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String,
-    val imageUrl: String,
+    val value: String,
+    val imageUrl: String? = null,
     val questionId: Int,
 )
 
 fun OptionEntity.toModel(): Option {
     return Option(
         id = id,
-        name = name,
+        value = value,
         imageUrl = imageUrl,
         questionId = questionId,
     )

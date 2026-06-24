@@ -14,7 +14,7 @@ import com.valeria.parcial2_00002024.Data.database.entities.QuestionEntity
 @Database(
     entities = [QuestionEntity::class, OptionEntity::class],
     //cuando se agrege otra tabla sube
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 

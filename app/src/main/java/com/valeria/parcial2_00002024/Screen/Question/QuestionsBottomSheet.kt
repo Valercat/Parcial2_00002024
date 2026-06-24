@@ -23,20 +23,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-
+import com.valeria.parcial2_00002024.Data.model.Question
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionsBottomSheet(
     onSave: (title: String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    Question: Question? = null
 ) {
     val sheetState = rememberModalBottomSheetState()
     var title by rememberSaveable { mutableStateOf("") }
 
-
     val isValid = title.isNotBlank()
+
+    val edit = Question != null
 
     ModalBottomSheet(
         sheetState = sheetState,

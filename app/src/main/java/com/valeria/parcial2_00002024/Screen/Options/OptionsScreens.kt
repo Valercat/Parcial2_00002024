@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.valeria.parcial2_00002024.Data.model.Option
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +55,11 @@ fun OptionsScreen(
     val options by viewModel.options.collectAsStateWithLifecycle()
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
+    //puede o no recibir el objeto de option, esta seteado en null por defecto
+    //pero luego en el boton se le asigna para luego enviarlo al view model y al bottomsheet
+    var selectedOption by remember { mutableStateOf<Option?>(null) }
+
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         topBar = {
@@ -59,7 +67,10 @@ fun OptionsScreen(
                 title = { Text("Administrar opciones") },
                 actions = {
                     Row{
-                    TextButton(onClick = { showSheet = true }) {
+                    TextButton(onClick = {
+                        selectedOption = null
+                        showSheet = true
+                    }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Nueva opción")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Nuevo")
@@ -121,24 +132,35 @@ fun OptionsScreen(
                             ListItem(
                                 headlineContent = {
                                     Text(
-                                        text = option.name,
+                                        text = option.value,
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                 },
                                 supportingContent = {
-                                    Text(
-                                        text = option.imageUrl,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                    option.imageUrl?.let {
+                                        Text(
+                                            text = it,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 },
                                 trailingContent = {
                                     IconButton(onClick = { viewModel.deleteOption(option) }) {
                                         Icon(
                                             imageVector = Icons.Default.Delete,
-                                            contentDescription = "Borrar ${option.name}",
+                                            contentDescription = "Borrar ${option.value}",
                                             tint = MaterialTheme.colorScheme.error
                                         )
+                                    }
+                                    IconButton(onClick  = {
+                                        selectedOption = option
+                                        showSheet = true}){
+                                        Icon(
+                                            imageVector = Icons.Default.Edit,
+                                            contentDescription = "Editar ${option.value}"
+                                        )
+
                                     }
                                 }
                             )
@@ -149,12 +171,20 @@ fun OptionsScreen(
             }
         }
     }
+
     if (showSheet) {
         OptionBottomSheet(
-            onSave = { name, imageUrl ->
-                viewModel.addOption(name, imageUrl)
-            },
-            onDismiss = { showSheet = false }
+            Option = selectedOption,
+            onDismiss = { showSheet = false
+                        selectedOption = null},
+            onSave = { name, url ->
+                if (selectedOption == null) {
+                    viewModel.addOption(name, url)
+                } else {
+                    //copia el id del option escogido
+                    viewModel.updateOption(selectedOption!!.copy(value = name, imageUrl = url) )
+                }
+            }
         )
     }
 }

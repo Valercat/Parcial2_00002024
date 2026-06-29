@@ -1,1 +1,1 @@
-# Parcial2_00002024
+RankedUca hasta ejercicio extra

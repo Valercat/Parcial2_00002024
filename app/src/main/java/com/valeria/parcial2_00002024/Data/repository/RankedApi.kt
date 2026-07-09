@@ -1,6 +1,8 @@
 package com.valeria.parcial2_00002024.Data.repository
 
 import android.util.Log
+import com.valeria.parcial2_00002024.Data.model.VotoMasivo
+import com.valeria.parcial2_00002024.Data.model.VotoMasivoOptions
 import com.valeria.parcial2_00002024.Data.remote.KtorClient
 import com.valeria.parcial2_00002024.Data.remote.dto.GetRankedDto
 import com.valeria.parcial2_00002024.Data.remote.dto.PostRankedDTO
@@ -43,6 +45,22 @@ class RankedApi: RankedInterface{
             return Result.success(response)
         } catch (e: Exception) {
             Log.e("RankedUCA_Api", "Error al registrar voto: ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getQuestions(
+        id: Int,
+        text: String,
+        options: List<VotoMasivoOptions>
+    ): Result<List<VotoMasivo>> {
+        try {
+            val response: List<VotoMasivo> = KtorClient.client.get("/functions/v1/rankeuca/parcialtres/questions").body()
+
+            return Result.success(response.map { votoMasivo -> votoMasivo.toModel() })
+        }
+        catch (e: Exception){
+            Log.e("RankedUCA_Api", "Error al obtener lista de JSONs: ${e.message}")
             return Result.failure(e)
         }
     }

@@ -26,12 +26,13 @@ fun RankeUCA_App(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
-            entry<Routes.Home> {
+            entry<Routes.Home> { questionId ->
                 Home(
                     userName = userName,
                     onLogout = onLogout,
                     onQuestionClick = { backStack.add(Routes.Question) },
-                    onVoteClick = { backStack.add(Routes.Vote) }
+                    onVoteClick = { backStack.add(Routes.Vote) },
+                    onOptionClick = { backStack.add(Routes.Options(0)) }
                 )
             }
             entry<Routes.Question> {

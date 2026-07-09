@@ -26,7 +26,8 @@ fun Home(
     userName: String?,
     onLogout: () -> Unit,
     onQuestionClick: () -> Unit,
-    onVoteClick: () -> Unit
+    onVoteClick: () -> Unit,
+    onOptionClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -63,19 +64,39 @@ fun Home(
                 }
             }
 
+//            Card(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(120.dp),
+//                onClick = { onOptionClick
+//                          },
+//                enabled = true
+//            ) {
+//                Box(
+//                    modifier = Modifier.fillMaxSize(),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "Opciones",
+//                        style = MaterialTheme.typography.titleLarge,
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
                 onClick = onVoteClick,
-                enabled = false
+                enabled = true
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Votar",
+                        text = "Voto masivo",
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
@@ -84,7 +105,8 @@ fun Home(
 
             TextButton(
                 onClick = onLogout,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 Text("Cerrar sesión")

@@ -15,4 +15,5 @@ sealed class Routes : NavKey {
     @Serializable
     data object Vote : Routes()
 
+
 }

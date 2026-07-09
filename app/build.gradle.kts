@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.material3)
+//    implementation(libs.androidx.datastore.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -96,4 +97,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
+
 }

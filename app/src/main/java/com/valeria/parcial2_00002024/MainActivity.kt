@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Parcial2_00002024Theme {
-                RankeUCA_App()
+                AppRoot()
                 }
             }
         }

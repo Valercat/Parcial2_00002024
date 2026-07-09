@@ -16,7 +16,10 @@ import com.valeria.parcial2_00002024.Screen.Votacion.VotacionScreen
 import java.util.Map.entry
 
 @Composable
-fun RankeUCA_App() {
+fun RankeUCA_App(
+    userName: String?,
+    onLogout: () -> Unit
+) {
     val backStack = rememberNavBackStack(Routes.Home)
 
     NavDisplay(
@@ -25,6 +28,8 @@ fun RankeUCA_App() {
         entryProvider = entryProvider {
             entry<Routes.Home> {
                 Home(
+                    userName = userName,
+                    onLogout = onLogout,
                     onQuestionClick = { backStack.add(Routes.Question) },
                     onVoteClick = { backStack.add(Routes.Vote) }
                 )

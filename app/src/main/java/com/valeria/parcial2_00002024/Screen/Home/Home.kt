@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
+    userName: String?,
+    onLogout: () -> Unit,
     onQuestionClick: () -> Unit,
     onVoteClick: () -> Unit
 ) {
@@ -38,6 +41,11 @@ fun Home(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Bienvenido, $userName",
+                style = MaterialTheme.typography.headlineSmall
+            )
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -72,6 +80,14 @@ fun Home(
                         textAlign = TextAlign.Center
                     )
                 }
+            }
+
+            TextButton(
+                onClick = onLogout,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text("Cerrar sesión")
             }
         }
     }
